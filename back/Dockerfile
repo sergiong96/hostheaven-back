@@ -1,5 +1,4 @@
 FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY target/back.jar /app
+COPY target/back.jar back.jar
 EXPOSE 8080
-CMD ["java", "-jar", "back.jar"]
+ENTRYPOINT ["java", "-jar", "back.jar"]
