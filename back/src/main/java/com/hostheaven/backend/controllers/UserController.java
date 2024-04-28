@@ -20,7 +20,7 @@ import com.hostheaven.backend.services.implementation.UserService;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:3000") // CAMBIAR EN ENTORNO DE PRODUCCION
+@CrossOrigin(origins = {"http://localhost:3000", "https://hostheaven.netlify.app"}) 
 public class UserController {
 
 	@Autowired

@@ -13,7 +13,7 @@ import com.hostheaven.backend.services.implementation.GlosaryService;
 
 @RestController
 @RequestMapping("/glosary")
-@CrossOrigin(origins = "http://localhost:3000") //CAMBIAR EN ENTORNO DE PRODUCCION
+@CrossOrigin(origins = {"http://localhost:3000", "https://hostheaven.netlify.app"}) 
 public class GlosaryController {
 
 	@Autowired

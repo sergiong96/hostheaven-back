@@ -15,7 +15,7 @@ import com.hostheaven.backend.services.implementation.HostingPackageService;
 
 @RestController
 @RequestMapping("/hostingpackages")
-@CrossOrigin(origins = "http://localhost:3000") //CAMBIAR EN ENTORNO DE PRODUCCION
+@CrossOrigin(origins = {"http://localhost:3000", "https://hostheaven.netlify.app"}) 
 public class HostingPackageController {
 
 	@Autowired
