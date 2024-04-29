@@ -8,19 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hostheaven.backend.models.HostingPackage;
 import com.hostheaven.backend.models.HostingPackage.hostingType;
-import com.hostheaven.backend.models.HostingPackageTradeDTO;
 import com.hostheaven.backend.models.Trade;
 import com.hostheaven.backend.models.Trade.paymentMethod;
 import com.hostheaven.backend.models.Trade.tradeState;
-import com.hostheaven.backend.models.User;
 import com.hostheaven.backend.repositories.implementation.TradeRepository;
 import com.hostheaven.backend.services.interfaces.TradeServiceInterface;
 
 @Service
 public class TradeService implements TradeServiceInterface {
-
-	@Autowired
-	private UserService userService;
 	
 	@Autowired
 	private HostingPackageService hostingPackageService;
@@ -97,6 +92,13 @@ public class TradeService implements TradeServiceInterface {
 	public Trade getTradeByUserId(int id_user) {
 		Trade trade = this.tradeRepository.getTradeByUserId(id_user);
 		return trade;
+	}
+
+
+	@Override
+	public String updateTrade(Map<String, Object> data) {
+		String response=tradeRepository.updateTrade(data);
+		return response;
 	}
 
 

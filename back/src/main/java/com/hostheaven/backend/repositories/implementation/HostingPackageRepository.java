@@ -112,6 +112,7 @@ public class HostingPackageRepository implements HostingPackageRepositoryInterfa
 		hostingDTO.setDate_start(trade.getDate_start());
 		hostingDTO.setDate_end(trade.getDate_end());
 		hostingDTO.setAmount(trade.getAmount());
+		hostingDTO.setId_trade(trade.getId_trade());
 		
 		transaction.commit();
 		session.close();

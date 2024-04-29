@@ -2,9 +2,6 @@ package com.hostheaven.backend.services.interfaces;
 
 import java.text.ParseException;
 import java.util.Map;
-
-import com.hostheaven.backend.models.HostingPackage;
-import com.hostheaven.backend.models.HostingPackageTradeDTO;
 import com.hostheaven.backend.models.Trade;
 
 public interface TradeServiceInterface {
@@ -14,5 +11,6 @@ public interface TradeServiceInterface {
 	// Obtiene todos los datos de una transacción por su identificador
 	public Trade getTradeByUserId(int id);
 	
-	
+	// Actualiza el precio del trade y el paquete de hosting asociado
+	public String updateTrade(Map<String, Object> trade);
 }

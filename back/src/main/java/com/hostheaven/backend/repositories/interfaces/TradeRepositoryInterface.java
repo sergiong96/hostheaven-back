@@ -1,7 +1,6 @@
 package com.hostheaven.backend.repositories.interfaces;
 
-import com.hostheaven.backend.models.HostingPackage;
-import com.hostheaven.backend.models.HostingPackageTradeDTO;
+import java.util.Map;
 import com.hostheaven.backend.models.Trade;
 
 public interface TradeRepositoryInterface {
@@ -11,5 +10,8 @@ public interface TradeRepositoryInterface {
 
 	// Obtiene todos los datos de una transacción por su identificador
 	public Trade getTradeByUserId(int id);
+	
+	// Actualiza el precio del trade y el paquete de hosting asociado
+	public String updateTrade(Map<String, Object> trade);
 
 }
