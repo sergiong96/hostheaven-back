@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,15 @@ public class TradeController {
 	@PostMapping("/update")
 	public ResponseEntity<String> updateTrade(@RequestBody Map<String, Object> data){
 		String response = tradeService.updateTrade(data);
+		JSONObject jsonResponse = new JSONObject();
+		jsonResponse.put("response", response);
+		return new ResponseEntity<String>(jsonResponse.toString(), HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/delete/{id_trade}/{id_user}")
+	public ResponseEntity<String> deleteTrade(@PathVariable int id_trade, @PathVariable int id_user){
+		String response = tradeService.deleteTrade(id_trade, id_user);
 		JSONObject jsonResponse = new JSONObject();
 		jsonResponse.put("response", response);
 		return new ResponseEntity<String>(jsonResponse.toString(), HttpStatus.OK);

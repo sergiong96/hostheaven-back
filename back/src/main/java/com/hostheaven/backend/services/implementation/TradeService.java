@@ -100,6 +100,13 @@ public class TradeService implements TradeServiceInterface {
 		String response=tradeRepository.updateTrade(data);
 		return response;
 	}
-
-
+	
+	
+	@Override
+	public String deleteTrade(int id_trade, int id_user){
+		String response=tradeRepository.deleteTrade(id_trade, id_user);
+		return response;
+	}
+	
+	
 }

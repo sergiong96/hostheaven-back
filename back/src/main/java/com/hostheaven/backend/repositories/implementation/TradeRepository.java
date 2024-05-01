@@ -111,4 +111,44 @@ public class TradeRepository implements TradeRepositoryInterface {
 		return response;
 	}
 
+	
+	@Override
+	public String deleteTrade(int id_trade, int id_user){
+
+		Session session=null;
+		Transaction transaction=null;
+		String response="";
+		
+		try{
+			session=sessionFactory.openSession();
+			transaction=session.beginTransaction();
+		
+			String hql="DELETE FROM Trades WHERE id_trade=:id_trade AND id_user=:id_user";
+			Query<Integer> query=session.createQuery(hql, Integer.class);
+			query.setParameter("id_trade", id_trade);
+			query.setParameter("id_user", id_user);
+			query.executeUpdate();
+			
+			transaction.commit();
+			response="Servicio eliminado con éxito";
+
+		}catch(Exception e){
+		
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			response = "Error al eliminar el servicio: " + e.getMessage();
+
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		
+		}
+		
+		return response;
+
+	}
+	
+	
 }

@@ -13,4 +13,7 @@ public interface TradeServiceInterface {
 	
 	// Actualiza el precio del trade y el paquete de hosting asociado
 	public String updateTrade(Map<String, Object> trade);
+	
+	// Elimina el servicio contratado de un usuario
+	public String deleteTrade(int id_trade, int id_user);
 }
