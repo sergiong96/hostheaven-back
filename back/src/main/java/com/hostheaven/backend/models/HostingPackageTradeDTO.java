@@ -2,8 +2,6 @@ package com.hostheaven.backend.models;
 
 import java.util.Date;
 
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 public class HostingPackageTradeDTO {
 

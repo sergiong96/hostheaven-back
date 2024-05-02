@@ -11,11 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hostheaven.backend.models.HostingPackageTradeDTO;
 import com.hostheaven.backend.models.User;
-import com.hostheaven.backend.models.UserDTO;
-import com.hostheaven.backend.services.implementation.TradeService;
 import com.hostheaven.backend.services.implementation.UserService;
 
 @RestController
@@ -26,8 +22,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private TradeService tradeService;
 	
 
 	@PostMapping("/signIn") // ok
@@ -48,8 +42,15 @@ public class UserController {
 	@PostMapping("/logIn") // ok
 	public String verifyCredentials(@RequestBody String credentials) {
 		JSONObject token = userService.verifyCredentials(credentials);
-
 		return token.toString();
+	}
+	
+	@PostMapping("/signInLogIn") 
+	public ResponseEntity<String> signInAndLogIn(@RequestBody User user) {
+		String token = userService.signInAndLogIn(user);
+		JSONObject tokenJSON=new JSONObject();
+		tokenJSON.put("token", token);
+		return new ResponseEntity<String>(tokenJSON.toString(), HttpStatus.OK);
 	}
 
 	@PostMapping("/updateUser") // ok

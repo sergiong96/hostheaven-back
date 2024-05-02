@@ -27,10 +27,6 @@ public class TradeService implements TradeServiceInterface {
 	@Override
 	public String createTrade(Map<String, String> trade) throws ParseException {
 
-		//Capturar la propiedad custom que podria venir en el trade si es personalizado (es un Map con todas las propiedades) ok
-		//Si es personalizado, capturar todas las propiedades necesarias para insertar un nuevo hostingPackage ok
-		//Si es estandar, pasar directamente a createTrade, creando un objeto trade a raiz del Map
-		//Despues, con el id que devuelva insertCustomPackage debo crear un objeto trade con las propiedades necesarias del Object + el id
 		String response="";
 		Trade tradeObj=new Trade();
 		

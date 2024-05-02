@@ -2,6 +2,7 @@ package com.hostheaven.backend.controllers;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +16,8 @@ import com.hostheaven.backend.services.implementation.HostingPackageService;
 
 @RestController
 @RequestMapping("/hostingpackages")
-@CrossOrigin(origins = {"http://localhost:3000", "https://main--hostheaven.netlify.app", "https://hostheaven.netlify.app"}) 
+@CrossOrigin(origins = { "http://localhost:3000", "https://main--hostheaven.netlify.app",
+		"https://hostheaven.netlify.app" })
 public class HostingPackageController {
 
 	@Autowired
@@ -31,18 +33,23 @@ public class HostingPackageController {
 		HostingPackage hostingPackage = hostingPackageService.getHostingPackageById(id);
 		return hostingPackage;
 	}
-	
+
 	@GetMapping("/standard")
-	public List<HostingPackage> getAllStandardPackages(){
-		List<HostingPackage> hostingPackages=hostingPackageService.getAllStandardHostingPackages();
+	public List<HostingPackage> getAllStandardPackages() {
+		List<HostingPackage> hostingPackages = hostingPackageService.getAllStandardHostingPackages();
 		return hostingPackages;
 	}
-	
 
 	@PostMapping("/getHostingPackage/{id_user}")
-	public HostingPackageTradeDTO getHostingPackageByUserId(@PathVariable int id_user) {
+	public ResponseEntity<HostingPackageTradeDTO> getHostingPackageByUserId(@PathVariable int id_user) {
 		HostingPackageTradeDTO hostingPackage = hostingPackageService.getHostingPackageByUserId(id_user);
-		return hostingPackage;
+
+		if (hostingPackage != null) {
+			return ResponseEntity.ok(hostingPackage);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+
 	}
 
 }

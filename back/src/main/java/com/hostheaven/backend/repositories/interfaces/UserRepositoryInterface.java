@@ -1,7 +1,6 @@
 package com.hostheaven.backend.repositories.interfaces;
 
 import com.hostheaven.backend.models.User;
-import com.hostheaven.backend.models.UserDTO;
 
 public interface UserRepositoryInterface {
 
@@ -22,4 +21,7 @@ public interface UserRepositoryInterface {
 	
 	// Elimina un usuario según su identificador y devuelve un String en función de si la operación ha tenido éxito o no
 	public String deleteUser(User user);
+	
+	// Crea un nuevo usuario y lo devuelve (para crear el token de sesion con sus datos)
+	public User signInAndLogIn(User user);
 }

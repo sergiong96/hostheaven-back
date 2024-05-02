@@ -7,7 +7,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.hostheaven.backend.models.User;
-import com.hostheaven.backend.models.UserDTO;
 import com.hostheaven.backend.repositories.interfaces.UserRepositoryInterface;
 
 @Repository
@@ -79,26 +78,26 @@ public class UserRepository implements UserRepositoryInterface {
 
 		return usuario;
 	}
-	
-	//public UserDTO getUserDTOById(int id) { // ok
-	///	Session session = sessionFactory.openSession();
-	//	Transaction transaction = session.beginTransaction();
 
-	//	String hql = "FROM User WHERE id_user=:id_user";
-	//	Query<User> query = session.createQuery(hql, User.class);
-	//	query.setParameter("id_user", id);
-	//	User usuario = query.uniqueResult();
+	// public UserDTO getUserDTOById(int id) { // ok
+	/// Session session = sessionFactory.openSession();
+	// Transaction transaction = session.beginTransaction();
 
-	//	UserDTO usuarioDTO=new UserDTO();
-	//	usuarioDTO.setId_user(usuario.getId_user());
-	////	usuarioDTO.setName(usuario.getName());
-	//	usuarioDTO.setSurname(usuario.getSurname());
-	//	usuarioDTO.setEmail(usuario.getEmail());
-	//	transaction.commit();
-	//	session.close();
+	// String hql = "FROM User WHERE id_user=:id_user";
+	// Query<User> query = session.createQuery(hql, User.class);
+	// query.setParameter("id_user", id);
+	// User usuario = query.uniqueResult();
 
-	//	return usuarioDTO;
-	//}
+	// UserDTO usuarioDTO=new UserDTO();
+	// usuarioDTO.setId_user(usuario.getId_user());
+	//// usuarioDTO.setName(usuario.getName());
+	// usuarioDTO.setSurname(usuario.getSurname());
+	// usuarioDTO.setEmail(usuario.getEmail());
+	// transaction.commit();
+	// session.close();
+
+	// return usuarioDTO;
+	// }
 
 	@Override
 	public User getUserDataByEmail(String email) {
@@ -219,6 +218,36 @@ public class UserRepository implements UserRepositoryInterface {
 		}
 
 		return message;
+	}
+
+	@Override
+	public User signInAndLogIn(User user) {
+
+		Session session = null;
+		Transaction transaction = null;
+		User savedUser = null;
+
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+
+			session.persist(user);
+
+			transaction.commit();
+			savedUser = user;
+
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return savedUser;
 	}
 
 }

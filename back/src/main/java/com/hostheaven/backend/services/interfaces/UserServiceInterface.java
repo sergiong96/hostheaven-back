@@ -1,11 +1,8 @@
 package com.hostheaven.backend.services.interfaces;
 
 import java.util.Map;
-
 import org.json.JSONObject;
-
 import com.hostheaven.backend.models.User;
-import com.hostheaven.backend.models.UserDTO;
 
 public interface UserServiceInterface {
 
@@ -31,5 +28,8 @@ public interface UserServiceInterface {
 	// Elimina un usuario según su identificador y devuelve un String en función de
 	// si la operación ha tenido éxito o no
 	public String deleteUser(int user_id, String rawPassword);
+	
+	// Crea un nuevo usuario y devuelve el token de sesión
+	public String signInAndLogIn(User user);
 	
 }

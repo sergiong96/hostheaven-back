@@ -3,7 +3,6 @@ package com.hostheaven.backend.services.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hostheaven.backend.models.User;
-import com.hostheaven.backend.models.UserDTO;
 import com.hostheaven.backend.repositories.implementation.UserRepository;
 import com.hostheaven.backend.services.interfaces.UserServiceInterface;
 
@@ -133,5 +132,28 @@ public class UserService implements UserServiceInterface {
 		}
 
 		return message;
+	}
+	
+	
+	@Override
+	public String signInAndLogIn(User user){
+		String token="";
+		String email = user.getEmail();
+		boolean emailExists = this.emailExists(email);
+
+		if (!emailExists) {
+			String pass = user.getPassword();
+			String encriptedPass = securityService.generateHash(pass);
+			user.setPassword(encriptedPass);
+			User savedUser=userRepository.signInAndLogIn(user);
+			
+			int id_user=savedUser.getId_user();
+			String name=savedUser.getName();
+			String userEmail=savedUser.getEmail();
+			
+			token = securityService.createToken(id_user, name, userEmail);
+		} 
+		
+		return token;
 	}
 }
