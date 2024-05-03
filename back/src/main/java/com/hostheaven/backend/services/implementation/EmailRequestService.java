@@ -1,5 +1,7 @@
 package com.hostheaven.backend.services.implementation;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -43,6 +45,13 @@ public class EmailRequestService implements EmailRequestServiceInterface {
 		}
 
 		return response;
+	}
+	
+	
+	@Override
+	public List<EmailRequest> getTickets(int user_id){
+		List<EmailRequest> tickets=emailRequestRepository.getTickets(user_id);
+		return tickets;
 	}
 
 }

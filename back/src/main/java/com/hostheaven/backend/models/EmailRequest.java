@@ -32,15 +32,18 @@ public class EmailRequest {
 	private String message; //(mensaje escrito en el textarea)
 
 	private String state; //(estado de la respuesta al mensaje)
-
 	
+	private int id_user;
+	
+	private String response;
+
 	
 	public EmailRequest() {
 		
 	}
 	
-	
-	public EmailRequest(int id_email_request, String sender, String receiver, String subject, String message, String state) {
+	public EmailRequest(int id_email_request, String sender, String receiver, String subject, String message,
+			String state, int id_user, String response) {
 		super();
 		this.id_email_request = id_email_request;
 		this.sender = sender;
@@ -48,9 +51,30 @@ public class EmailRequest {
 		this.subject = subject;
 		this.message = message;
 		this.state = state;
+		this.id_user = id_user;
+		this.response = response;
 	}
-	
-	
+
+
+	public int getId_user() {
+		return id_user;
+	}
+
+
+	public void setId_user(int id_user) {
+		this.id_user = id_user;
+	}
+
+
+	public String getResponse() {
+		return response;
+	}
+
+
+	public void setResponse(String response) {
+		this.response = response;
+	}
+
 	
 	public int getId_email_request() {
 		return id_email_request;
@@ -102,8 +126,9 @@ public class EmailRequest {
 
 	@Override
 	public String toString() {
-		return "EmailRequest [id_email_request=" + id_email_request + ", sender=" + sender + ", receiver=" + receiver + ", subject="
-				+ subject + ", message=" + message + ", state=" + state + "]";
+		return "EmailRequest [id_email_request=" + id_email_request + ", sender=" + sender + ", receiver=" + receiver
+				+ ", subject=" + subject + ", message=" + message + ", state=" + state + ", id_user=" + id_user
+				+ ", response=" + response + "]";
 	}
 
 
