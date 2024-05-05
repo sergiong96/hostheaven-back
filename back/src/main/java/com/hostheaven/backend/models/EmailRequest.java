@@ -30,17 +30,24 @@ public class EmailRequest {
 
 	@Column(nullable = false)
 	private String message; //(mensaje escrito en el textarea)
-
+	
+	@Column(nullable = true)
 	private String state; //(estado de la respuesta al mensaje)
 	
+	@Column(nullable = true)
+	private String response;
+	
+	@Column(nullable = true)
 	private int id_user;
 	
-	private String response;
-
+	
+	
 	
 	public EmailRequest() {
 		
 	}
+	
+	
 	
 	public EmailRequest(int id_email_request, String sender, String receiver, String subject, String message,
 			String state, int id_user, String response) {

@@ -59,7 +59,7 @@ public class EmailRequestRepository implements EmailRequestRepositoryInterface {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
 
-			String hql = "FROM EmailRequest WHERE id_user=:id_user AND subject=ticket";
+			String hql = "FROM EmailRequest WHERE id_user=:id_user AND subject='ticket'";
 			Query<EmailRequest> query = session.createQuery(hql, EmailRequest.class);
 			query.setParameter("id_user", id_user);
 			tickets = query.getResultList();
