@@ -41,8 +41,10 @@ public class User {
 	private String password; // Hash de la contraseña 
 
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = true)
 	private paymentMethod payment_method; // Método de pago seleccionado
 
+	@Column(nullable = true)
 	private String payment_reference; // Cuenta bancaria, tarjeta, wallet, etc... guardada para el cobro
 	
 	

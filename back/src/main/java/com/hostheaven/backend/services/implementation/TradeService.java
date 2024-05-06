@@ -60,7 +60,6 @@ public class TradeService implements TradeServiceInterface {
 			hostingPackage.setHosting_type(hostingTypeParsed);
 			hostingPackage.setMigration(Boolean.parseBoolean((String)trade.get("cdn")));
 			hostingPackage.setMonthly_bandwidth(Integer.parseInt(trade.get("monthly_bandwidth")));
-			hostingPackage.setPackage_name((String)trade.get("package_name"));
 			hostingPackage.setPackage_price(Double.parseDouble((String)trade.get("package_price")));
 			hostingPackage.setPurchase_quantity(Integer.parseInt(trade.get("purchase_quantity")));
 			hostingPackage.setSsl(Boolean.parseBoolean((String)trade.get("ssl")));

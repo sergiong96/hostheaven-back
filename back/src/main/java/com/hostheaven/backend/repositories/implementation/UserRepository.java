@@ -195,22 +195,20 @@ public class UserRepository implements UserRepositoryInterface {
 		String message = "";
 
 		try {
-
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
 
-			session.remove(user);
+			User managedUser = session.get(User.class, user.getId_user());
+			session.remove(managedUser);
 			transaction.commit();
 			message = "Cuenta eliminada con éxito";
 
 		} catch (Exception e) {
-
 			if (transaction != null) {
 				transaction.rollback();
 			}
 
 			message = "Ha ocurrido un error inesperado";
-
 		} finally {
 			if (session != null) {
 				session.close();

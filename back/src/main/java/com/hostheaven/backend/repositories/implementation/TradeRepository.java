@@ -88,8 +88,9 @@ public class TradeRepository implements TradeRepositoryInterface {
 			hostingPackage.setDomains(Integer.parseInt(hostingPackageData.get("domains").toString()));
 			hostingPackage.setDatabases(Integer.parseInt(hostingPackageData.get("databases").toString()));
 			hostingPackage.setEmail_account(Integer.parseInt(hostingPackageData.get("email_account").toString()));
-			hostingPackage.setMonthly_bandwidth(Integer.parseInt(hostingPackageData.get("monthly_bandwidth").toString()));
-			
+			hostingPackage
+					.setMonthly_bandwidth(Integer.parseInt(hostingPackageData.get("monthly_bandwidth").toString()));
+
 			session.merge(trade);
 			session.merge(hostingPackage);
 
@@ -111,29 +112,31 @@ public class TradeRepository implements TradeRepositoryInterface {
 		return response;
 	}
 
-	
 	@Override
-	public String deleteTrade(int id_trade, int id_user){
+	public String deleteTrade(int id_trade, int id_user) {
 
-		Session session=null;
-		Transaction transaction=null;
-		String response="";
-		
-		try{
-			session=sessionFactory.openSession();
-			transaction=session.beginTransaction();
-		
-			String hql="DELETE FROM Trades WHERE id_trade=:id_trade AND id_user=:id_user";
-			Query<Integer> query=session.createQuery(hql, Integer.class);
+		Session session = null;
+		Transaction transaction = null;
+		String response = "";
+		Trade trade = null;
+
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+
+			String hql = "FROM Trade WHERE id_trade=:id_trade AND id_user=:id_user";
+			Query<Trade> query = session.createQuery(hql, Trade.class);
 			query.setParameter("id_trade", id_trade);
 			query.setParameter("id_user", id_user);
-			query.executeUpdate();
-			
-			transaction.commit();
-			response="Servicio eliminado con éxito";
+			trade = query.uniqueResult();
 
-		}catch(Exception e){
-		
+			session.remove(trade);
+
+			transaction.commit();
+			response = "Servicio eliminado con éxito";
+
+		} catch (Exception e) {
+
 			if (transaction != null) {
 				transaction.rollback();
 			}
@@ -143,12 +146,11 @@ public class TradeRepository implements TradeRepositoryInterface {
 			if (session != null) {
 				session.close();
 			}
-		
+
 		}
-		
+
 		return response;
 
 	}
-	
-	
+
 }
