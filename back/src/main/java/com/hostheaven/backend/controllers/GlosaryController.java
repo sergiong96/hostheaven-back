@@ -19,11 +19,11 @@ public class GlosaryController {
 	@Autowired
 	private GlosaryService glosaryService;
 
+	
 	@GetMapping("/list")
 	public List<Glosary> getAllConcepts(){
 		List<Glosary> concepts=glosaryService.getAllConcepts();
 		return concepts;
 	}
 	
-
 }

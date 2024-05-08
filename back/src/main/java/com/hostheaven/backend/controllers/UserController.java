@@ -3,7 +3,6 @@ package com.hostheaven.backend.controllers;
 import java.util.Map;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,67 +15,113 @@ import com.hostheaven.backend.services.implementation.UserService;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = {"http://localhost:3000", "https://main--hostheaven.netlify.app", "https://hostheaven.netlify.app"}) 
+@CrossOrigin(origins = { "http://localhost:3000", "https://main--hostheaven.netlify.app", "https://hostheaven.netlify.app" })
 public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
-	
 
-	@PostMapping("/signIn") // ok
+	
+	@PostMapping("/signIn")
 	public ResponseEntity<String> createUser(@RequestBody User user) {
-		String response = userService.createUser(user);
-		JSONObject responseJson = new JSONObject();
-		responseJson.put("response", response);
-		return new ResponseEntity<String>(responseJson.toString(), HttpStatus.OK);
-	}
+		ResponseEntity<String> httpResponse = null;
+		String message = userService.createUser(user);
+		JSONObject messageJson = new JSONObject();
+		messageJson.put("message", message);
 
-	@PostMapping("/getUser/{id}") // ok
+		if (message.toLowerCase().contains("error")) {
+			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
+		} else {
+			httpResponse = ResponseEntity.ok(messageJson.toString());
+		}
+
+		return httpResponse;
+	}
+	
+
+	@PostMapping("/getUser/{id}")
 	public User getUserById(@PathVariable int id) {
 		User usuario = userService.getUserById(id);
 		return usuario;
 	}
-	
 
-	@PostMapping("/logIn") // ok
+	
+	@PostMapping("/logIn")
 	public String verifyCredentials(@RequestBody String credentials) {
 		JSONObject token = userService.verifyCredentials(credentials);
 		return token.toString();
 	}
+
 	
-	@PostMapping("/signInLogIn") 
+	@PostMapping("/signInLogIn")
 	public ResponseEntity<String> signInAndLogIn(@RequestBody User user) {
-		String token = userService.signInAndLogIn(user);
-		JSONObject tokenJSON=new JSONObject();
-		tokenJSON.put("token", token);
-		return new ResponseEntity<String>(tokenJSON.toString(), HttpStatus.OK);
+		ResponseEntity<String> httpResponse = null;
+		String token = "";
+		String message = userService.signInAndLogIn(user);
+		JSONObject messageJson = new JSONObject();
+
+		if (message.toLowerCase().contains("error")) {
+			messageJson.put("message", message);
+			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
+		} else {
+			token = message;
+			messageJson.put("token", token);
+			messageJson.put("message", "Usuario registrado con éxito");
+			httpResponse = ResponseEntity.ok(messageJson.toString());
+		}
+
+		return httpResponse;
 	}
 
-	@PostMapping("/updateUser") // ok
+	
+	@PostMapping("/updateUser")
 	public ResponseEntity<String> updateUser(@RequestBody User user) {
-		String response = userService.updateUser(user);
-		JSONObject responseJson = new JSONObject();
-		responseJson.put("response", response);
-		return new ResponseEntity<String>(responseJson.toString(), HttpStatus.OK);
+		ResponseEntity<String> httpResponse = null;
+		String message = userService.updateUser(user);
+		JSONObject messageJson = new JSONObject();
+		messageJson.put("message", message);
+
+		if (message.toLowerCase().contains("error")) {
+			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
+		} else {
+			httpResponse = ResponseEntity.ok(messageJson.toString());
+		}
+
+		return httpResponse;
+	}
+	
+
+	@PostMapping("/changePassword")
+	public ResponseEntity<String> changePassword(@RequestBody Map<String, String> passwordData) {
+		ResponseEntity<String> httpResponse = null;
+		String message = userService.changePassword(passwordData);
+		JSONObject messageJson = new JSONObject();
+		messageJson.put("message", message);
+
+		if (message.toLowerCase().contains("error")) {
+			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
+		} else {
+			httpResponse = ResponseEntity.ok(messageJson.toString());
+		}
+
+		return httpResponse;
 	}
 
-	@PostMapping("/changePassword") //ok
-	public ResponseEntity<String> changePassword(@RequestBody Map<String, String> passwordData) { 
-		String response = userService.changePassword(passwordData);
-		JSONObject responseJson = new JSONObject();
-		responseJson.put("response", response);
-		return new ResponseEntity<String>(responseJson.toString(), HttpStatus.OK);
-	}
-
+	
 	@PostMapping("/delete/{user_id}")
 	public ResponseEntity<String> deleteUser(@PathVariable int user_id, @RequestBody String password) { // ok
-		String response=userService.deleteUser(user_id, password);
-		JSONObject responseJson = new JSONObject();
-		responseJson.put("response", response);
-		return new ResponseEntity<String>(responseJson.toString(), HttpStatus.OK);
+		ResponseEntity<String> httpResponse = null;
+		String message = userService.deleteUser(user_id, password);
+		JSONObject messageJson = new JSONObject();
+		messageJson.put("message", message);
+
+		if (message.toLowerCase().contains("error")) {
+			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
+		} else {
+			httpResponse = ResponseEntity.ok(messageJson.toString());
+		}
+
+		return httpResponse;
 	}
-	
-	
-	
+
 }

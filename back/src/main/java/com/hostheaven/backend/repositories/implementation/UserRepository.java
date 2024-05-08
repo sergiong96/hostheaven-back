@@ -15,8 +15,9 @@ public class UserRepository implements UserRepositoryInterface {
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	
 	@Override
-	public String createUser(User user) { // ok
+	public String createUser(User user) {
 		String response = "";
 		Session session = null;
 		Transaction transaction = null;
@@ -31,38 +32,49 @@ public class UserRepository implements UserRepositoryInterface {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			response = "Error al insertar el usuario: " + e.getMessage();
+			response = "Error en el proceso de registro: " + e.getMessage();
 		} finally {
 			session.close();
 		}
 
 		return response;
-
 	}
+	
 
-	public boolean verifyEmail(String email) { // ok
+	public boolean verifyEmail(String email) {
 		boolean emailExists = false;
-		String response = "";
+		int response = 0;
+		Session session = null;
+		Transaction transaction = null;
 
-		Session session = sessionFactory.openSession();
-		Transaction transaction = session.beginTransaction();
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
 
-		String hql = "SELECT id_user FROM User WHERE email=:email";
-		Query<String> query = session.createQuery(hql, String.class);
-		query.setParameter("email", email);
+			String hql = "SELECT id_user FROM User WHERE email=:email";
+			Query<Integer> query = session.createQuery(hql, Integer.class);
+			query.setParameter("email", email);
+			response = query.uniqueResult() != null ? query.uniqueResult() : -1;
 
-		response = query.uniqueResult();
-
-		if (response != null) {
-			emailExists = true;
+			if (response != -1) {
+				emailExists = true;
+			}
+			transaction.commit();
+			
+		} catch (Exception e) {
+			emailExists = false;
+			response = 0;
+			
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
-
-		transaction.commit();
-		session.close();
 
 		return emailExists;
 	}
 
+	
 	@Override
 	public User getUserById(int id) { // ok
 		Session session = sessionFactory.openSession();
@@ -116,6 +128,7 @@ public class UserRepository implements UserRepositoryInterface {
 		return data;
 	}
 
+	
 	@Override
 	public String updateUser(User userData) { // ok
 
@@ -136,9 +149,9 @@ public class UserRepository implements UserRepositoryInterface {
 
 				transaction.commit();
 
-				response = "Actualizacion realizada con exito";
+				response = "Actualización realizada con éxito";
 			} else {
-				response = "Usuario no encontrado";
+				response = "Error: usuario no encontrado";
 			}
 
 		} catch (Exception e) {
@@ -154,6 +167,7 @@ public class UserRepository implements UserRepositoryInterface {
 
 		return response;
 	}
+	
 
 	@Override
 	public String changePassword(User user, String newPassword) { // ok
@@ -170,11 +184,11 @@ public class UserRepository implements UserRepositoryInterface {
 
 			transaction.commit();
 
-			response = "Contraseña actualizada con exito";
+			response = "Contraseña actualizada con éxito";
 
 		} catch (Exception e) {
 
-			response = "Error al actualizar: " + e.getMessage();
+			response = "Error al cambiar la contraseña: " + e.getMessage();
 			if (transaction != null) {
 				transaction.rollback();
 			}
@@ -187,6 +201,7 @@ public class UserRepository implements UserRepositoryInterface {
 
 		return response;
 	}
+	
 
 	@Override
 	public String deleteUser(User user) {
@@ -218,6 +233,7 @@ public class UserRepository implements UserRepositoryInterface {
 		return message;
 	}
 
+	
 	@Override
 	public User signInAndLogIn(User user) {
 

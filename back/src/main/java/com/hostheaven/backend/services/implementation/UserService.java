@@ -137,7 +137,8 @@ public class UserService implements UserServiceInterface {
 	
 	@Override
 	public String signInAndLogIn(User user){
-		String token="";
+		String token = "";
+		String response = "";
 		String email = user.getEmail();
 		boolean emailExists = this.emailExists(email);
 
@@ -145,15 +146,22 @@ public class UserService implements UserServiceInterface {
 			String pass = user.getPassword();
 			String encriptedPass = securityService.generateHash(pass);
 			user.setPassword(encriptedPass);
-			User savedUser=userRepository.signInAndLogIn(user);
-			
-			int id_user=savedUser.getId_user();
-			String name=savedUser.getName();
-			String userEmail=savedUser.getEmail();
-			
-			token = securityService.createToken(id_user, name, userEmail);
-		} 
-		
-		return token;
+			User savedUser = userRepository.signInAndLogIn(user);
+
+			if (savedUser != null) {
+				int id_user = savedUser.getId_user();
+				String name = savedUser.getName();
+				String userEmail = savedUser.getEmail();
+				token = securityService.createToken(id_user, name, userEmail);
+				response = token != "" ? token : "Error al generar el token";
+				
+			} else {
+				response = "Error en el proceso de registro";
+			}
+		} else {
+			response = "Error: ya existe una cuenta vinculada a este correo electrónico";
+		}
+
+		return response;
 	}
 }

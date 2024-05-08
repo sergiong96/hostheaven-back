@@ -23,33 +23,39 @@ public class HostingPackageController {
 	@Autowired
 	private HostingPackageService hostingPackageService;
 
+	
 	@PutMapping("/create")
 	public void createHostingPackage(HostingPackage hostingPackage) {
 		hostingPackageService.createHostingPackage(hostingPackage);
 	}
 
+	
 	@GetMapping("/hostingpackage/{id}")
 	public HostingPackage getHostingPackage(@PathVariable int id) {
 		HostingPackage hostingPackage = hostingPackageService.getHostingPackageById(id);
 		return hostingPackage;
 	}
+	
 
 	@GetMapping("/standard")
 	public List<HostingPackage> getAllStandardPackages() {
 		List<HostingPackage> hostingPackages = hostingPackageService.getAllStandardHostingPackages();
 		return hostingPackages;
 	}
+	
 
 	@PostMapping("/getHostingPackage/{id_user}")
 	public ResponseEntity<HostingPackageTradeDTO> getHostingPackageByUserId(@PathVariable int id_user) {
+		ResponseEntity<HostingPackageTradeDTO> httpResponse = null;
 		HostingPackageTradeDTO hostingPackage = hostingPackageService.getHostingPackageByUserId(id_user);
 
 		if (hostingPackage != null) {
-			return ResponseEntity.ok(hostingPackage);
+			httpResponse = ResponseEntity.ok(hostingPackage);
 		} else {
-			return ResponseEntity.notFound().build();
+			httpResponse = ResponseEntity.notFound().build();
 		}
 
+		return httpResponse;
 	}
 
 }
