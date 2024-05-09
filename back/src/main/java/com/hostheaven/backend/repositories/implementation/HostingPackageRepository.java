@@ -82,7 +82,7 @@ public class HostingPackageRepository implements HostingPackageRepositoryInterfa
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
 
-		String hql = "FROM HostingPackage WHERE custom=:custom";
+		String hql = "FROM HostingPackage WHERE custom=:custom ORDER BY package_price";
 		Query<HostingPackage> query = session.createQuery(hql, HostingPackage.class);
 		query.setParameter("custom", false);
 		List<HostingPackage> hostingPackages = query.getResultList();

@@ -33,7 +33,7 @@ public class SecurityService implements SecurityServiceInterface {
 	
 	
 	@Override
-	public String createToken(int id_user, String name, String email) { //ok
+	public String createToken(int id_user, String name, String email) throws Exception { //ok
 		String token = "";
 		byte[] claveBytes = SECRET_KEY.getBytes();
 
@@ -44,7 +44,7 @@ public class SecurityService implements SecurityServiceInterface {
 					.claim("name", name).signWith(SignatureAlgorithm.HS512, claveBytes) // Firma el token con un algoritmo de encriptación y la clave secreta pasada como un array de bytes[]
 					.compact(); // Une el token en un String
 		} catch (Exception e) {
-			token = "";
+			throw new Exception("Error al crear el token");
 		}
 
 		return token;

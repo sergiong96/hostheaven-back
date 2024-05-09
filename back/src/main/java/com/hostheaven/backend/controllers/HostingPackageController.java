@@ -52,7 +52,7 @@ public class HostingPackageController {
 		if (hostingPackage != null) {
 			httpResponse = ResponseEntity.ok(hostingPackage);
 		} else {
-			httpResponse = ResponseEntity.notFound().build();
+			httpResponse = ResponseEntity.noContent().build();
 		}
 
 		return httpResponse;

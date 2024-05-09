@@ -47,7 +47,7 @@ public class EmailRequestController {
 		if (tickets != null) {
 			httpResponse = ResponseEntity.ok(tickets);
 		} else {
-			httpResponse = ResponseEntity.notFound().build();
+			httpResponse = ResponseEntity.noContent().build();
 		}
 
 		return httpResponse;

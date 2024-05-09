@@ -12,7 +12,7 @@ public interface SecurityServiceInterface {
 	public boolean verifyPassword(String passwordInput, String passwordBD);
 	
 	// Devuelve el token de sesión con JWT
-	public String createToken(int id_user, String name, String email);
+	public String createToken(int id_user, String name, String email) throws Exception;
 	
 	// Valida el token pasado como parámetro y devuelve el id y email del usuario codificados en él en una cadena JSON
 	public JSONObject validateToken(String token);

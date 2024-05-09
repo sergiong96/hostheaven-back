@@ -22,7 +22,7 @@ public class UserService implements UserServiceInterface {
 	// Comprueba que el email no esté en la base dedatos, encripta la contraseña y
 	// registra al usuario
 	@Override
-	public String createUser(User user) { // ok
+	public String createUser(User user) throws Exception { // ok
 		String response = "";
 		String email = user.getEmail();
 		boolean emailExists = this.emailExists(email);
@@ -35,7 +35,7 @@ public class UserService implements UserServiceInterface {
 			user.setPassword(encriptedPass);
 			response = this.userRepository.createUser(user);
 		} else {
-			response = "El correo electrónico ya existe en la base de datos";
+			response = "Error: el correo electrónico ya existe en la base de datos";
 		}
 
 		return response;
@@ -62,7 +62,7 @@ public class UserService implements UserServiceInterface {
 	
 
 	@Override
-	public JSONObject verifyCredentials(String credentials) { // ok
+	public JSONObject verifyCredentials(String credentials) throws Exception { // ok
 		JSONObject credentialsOBJ = new JSONObject(credentials);
 		String inputEmail = credentialsOBJ.getString("email");
 		String inputPassword = credentialsOBJ.getString("password");
@@ -88,13 +88,13 @@ public class UserService implements UserServiceInterface {
 	}
 
 	@Override
-	public String updateUser(User user) { // ok
+	public String updateUser(User user) throws Exception { // ok
 		String mensaje = this.userRepository.updateUser(user);
 		return mensaje;
 	}
 
 	@Override
-	public String changePassword(Map<String, String> passwordData) { // ok
+	public String changePassword(Map<String, String> passwordData) throws Exception {
 
 		User user = userRepository.getUserById(Integer.parseInt(passwordData.get("id_user")));
 		String hashedUserPassword = user.getPassword();
@@ -109,7 +109,7 @@ public class UserService implements UserServiceInterface {
 		if (securityService.verifyPassword(rawPasswordToVerificate, hashedUserPassword)) {
 			response = userRepository.changePassword(user, newPasswordHash);
 		} else {
-			response = "La contraseña introducida no es correcta";
+			response = "Error: la contraseña introducida no es correcta";
 		}
 
 		return response;
@@ -117,7 +117,7 @@ public class UserService implements UserServiceInterface {
 	}
 
 	@Override
-	public String deleteUser(int user_id, String rawPassword) {
+	public String deleteUser(int user_id, String rawPassword) throws Exception {
 
 		String message = "";
 		User user = userRepository.getUserById(user_id);
@@ -136,7 +136,7 @@ public class UserService implements UserServiceInterface {
 	
 	
 	@Override
-	public String signInAndLogIn(User user){
+	public String signInAndLogIn(User user) throws Exception{
 		String token = "";
 		String response = "";
 		String email = user.getEmail();
@@ -153,10 +153,7 @@ public class UserService implements UserServiceInterface {
 				String name = savedUser.getName();
 				String userEmail = savedUser.getEmail();
 				token = securityService.createToken(id_user, name, userEmail);
-				response = token != "" ? token : "Error al generar el token";
-				
-			} else {
-				response = "Error en el proceso de registro";
+				response = token;
 			}
 		} else {
 			response = "Error: ya existe una cuenta vinculada a este correo electrónico";

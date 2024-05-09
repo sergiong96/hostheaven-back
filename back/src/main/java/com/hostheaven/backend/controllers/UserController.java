@@ -3,6 +3,7 @@ package com.hostheaven.backend.controllers;
 import java.util.Map;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +26,21 @@ public class UserController {
 	@PostMapping("/signIn")
 	public ResponseEntity<String> createUser(@RequestBody User user) {
 		ResponseEntity<String> httpResponse = null;
-		String message = userService.createUser(user);
+		String message = "";
 		JSONObject messageJson = new JSONObject();
-		messageJson.put("message", message);
 
-		if (message.toLowerCase().contains("error")) {
+		try {
+			message = userService.createUser(user);
+			messageJson.put("message", message);
+			if (message.toLowerCase().contains("el correo electrónico ya existe")) {
+				httpResponse = ResponseEntity.status(HttpStatus.CONFLICT).body(messageJson.toString());
+			} else {
+				httpResponse = ResponseEntity.ok(messageJson.toString());
+			}
+
+		} catch (Exception e) {
+			messageJson.put("message", e.getMessage());
 			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
-		} else {
-			httpResponse = ResponseEntity.ok(messageJson.toString());
 		}
 
 		return httpResponse;
@@ -46,9 +54,16 @@ public class UserController {
 	}
 
 	
+	//modificar, que devuelva tambien una responseentity con el token o un internal error
 	@PostMapping("/logIn")
 	public String verifyCredentials(@RequestBody String credentials) {
-		JSONObject token = userService.verifyCredentials(credentials);
+		JSONObject token=null;
+		
+		try {
+			token = userService.verifyCredentials(credentials);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return token.toString();
 	}
 
@@ -57,17 +72,25 @@ public class UserController {
 	public ResponseEntity<String> signInAndLogIn(@RequestBody User user) {
 		ResponseEntity<String> httpResponse = null;
 		String token = "";
-		String message = userService.signInAndLogIn(user);
+		String message = "";
 		JSONObject messageJson = new JSONObject();
 
-		if (message.toLowerCase().contains("error")) {
-			messageJson.put("message", message);
+		try {
+			message = userService.signInAndLogIn(user);
+	
+			if (message.toLowerCase().contains("ya existe una cuenta vinculada a este correo")) {
+				messageJson.put("message", message);
+				httpResponse = ResponseEntity.status(HttpStatus.CONFLICT).body(messageJson.toString());
+			} else {
+				token = message;
+				messageJson.put("token", token);
+				messageJson.put("message", "Usuario registrado con éxito");
+				httpResponse = ResponseEntity.ok(messageJson.toString());
+			}
+
+		} catch (Exception e) {
+				messageJson.put("message", e.getMessage());
 			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
-		} else {
-			token = message;
-			messageJson.put("token", token);
-			messageJson.put("message", "Usuario registrado con éxito");
-			httpResponse = ResponseEntity.ok(messageJson.toString());
 		}
 
 		return httpResponse;
@@ -77,14 +100,21 @@ public class UserController {
 	@PostMapping("/updateUser")
 	public ResponseEntity<String> updateUser(@RequestBody User user) {
 		ResponseEntity<String> httpResponse = null;
-		String message = userService.updateUser(user);
+		String message = "";
 		JSONObject messageJson = new JSONObject();
-		messageJson.put("message", message);
 
-		if (message.toLowerCase().contains("error")) {
+		try {
+			message = userService.updateUser(user);
+			messageJson.put("message", message);
+			if (message.toLowerCase().contains("usuario no encontrado")) {
+				httpResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageJson.toString());
+			} else {
+				httpResponse = ResponseEntity.ok(messageJson.toString());
+			}
+
+		} catch (Exception e) {
+			messageJson.put("message", e.getMessage());
 			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
-		} else {
-			httpResponse = ResponseEntity.ok(messageJson.toString());
 		}
 
 		return httpResponse;
@@ -94,14 +124,21 @@ public class UserController {
 	@PostMapping("/changePassword")
 	public ResponseEntity<String> changePassword(@RequestBody Map<String, String> passwordData) {
 		ResponseEntity<String> httpResponse = null;
-		String message = userService.changePassword(passwordData);
+		String message = "";
 		JSONObject messageJson = new JSONObject();
-		messageJson.put("message", message);
 
-		if (message.toLowerCase().contains("error")) {
+		try {
+			message = userService.changePassword(passwordData);
+			messageJson.put("message", message);
+
+			if (message.toLowerCase().contains("la contraseña introducida no es correcta")) {
+				httpResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(messageJson.toString());
+			} else {
+				httpResponse = ResponseEntity.ok(messageJson.toString());
+			}
+		} catch (Exception e) {
+				messageJson.put("message", e.getMessage());
 			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
-		} else {
-			httpResponse = ResponseEntity.ok(messageJson.toString());
 		}
 
 		return httpResponse;
@@ -109,16 +146,25 @@ public class UserController {
 
 	
 	@PostMapping("/delete/{user_id}")
-	public ResponseEntity<String> deleteUser(@PathVariable int user_id, @RequestBody String password) { // ok
+	public ResponseEntity<String> deleteUser(@PathVariable int user_id, @RequestBody String password) {
 		ResponseEntity<String> httpResponse = null;
-		String message = userService.deleteUser(user_id, password);
+		String message = "";
 		JSONObject messageJson = new JSONObject();
-		messageJson.put("message", message);
 
-		if (message.toLowerCase().contains("error")) {
+		try {
+			message = userService.deleteUser(user_id, password);
+			messageJson.put("message", message);
+
+			if (message.toLowerCase().contains("no encontrado")) {
+				httpResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageJson.toString());
+			} else if (message.toLowerCase().contains("la contraseña introducida no es correcta")) {
+				httpResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(messageJson.toString());
+			} else {
+				httpResponse = ResponseEntity.ok(messageJson.toString());
+			}
+		} catch (Exception e) {
+			messageJson.put("message", e.getMessage());
 			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
-		} else {
-			httpResponse = ResponseEntity.ok(messageJson.toString());
 		}
 
 		return httpResponse;

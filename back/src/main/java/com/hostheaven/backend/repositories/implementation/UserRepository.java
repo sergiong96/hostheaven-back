@@ -17,7 +17,7 @@ public class UserRepository implements UserRepositoryInterface {
 
 	
 	@Override
-	public String createUser(User user) {
+	public String createUser(User user) throws Exception {
 		String response = "";
 		Session session = null;
 		Transaction transaction = null;
@@ -32,7 +32,7 @@ public class UserRepository implements UserRepositoryInterface {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			response = "Error en el proceso de registro: " + e.getMessage();
+			throw new Exception("Error en el proceso de registro: " + e.getMessage());
 		} finally {
 			session.close();
 		}
@@ -130,7 +130,7 @@ public class UserRepository implements UserRepositoryInterface {
 
 	
 	@Override
-	public String updateUser(User userData) { // ok
+	public String updateUser(User userData) throws Exception {
 
 		Session session = null;
 		Transaction transaction = null;
@@ -155,10 +155,11 @@ public class UserRepository implements UserRepositoryInterface {
 			}
 
 		} catch (Exception e) {
-			response = "Error al actualizar: " + e.getMessage();
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			throw new Exception("Error al actualizar: " + e.getMessage());
+			
 		} finally {
 			if (session != null) {
 				session.close();
@@ -170,7 +171,7 @@ public class UserRepository implements UserRepositoryInterface {
 	
 
 	@Override
-	public String changePassword(User user, String newPassword) { // ok
+	public String changePassword(User user, String newPassword) throws Exception {
 		Session session = null;
 		Transaction transaction = null;
 		String response = "";
@@ -187,11 +188,11 @@ public class UserRepository implements UserRepositoryInterface {
 			response = "Contraseña actualizada con éxito";
 
 		} catch (Exception e) {
-
-			response = "Error al cambiar la contraseña: " + e.getMessage();
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			throw new Exception("Error al cambiar la contraseña: " + e.getMessage());
+			
 		} finally {
 			if (session != null) {
 				session.close();
@@ -204,7 +205,7 @@ public class UserRepository implements UserRepositoryInterface {
 	
 
 	@Override
-	public String deleteUser(User user) {
+	public String deleteUser(User user) throws Exception {
 		Session session = null;
 		Transaction transaction = null;
 		String message = "";
@@ -223,7 +224,7 @@ public class UserRepository implements UserRepositoryInterface {
 				transaction.rollback();
 			}
 
-			message = "Ha ocurrido un error inesperado";
+			throw new Exception("Ha ocurrido un error inesperado");
 		} finally {
 			if (session != null) {
 				session.close();
@@ -235,7 +236,7 @@ public class UserRepository implements UserRepositoryInterface {
 
 	
 	@Override
-	public User signInAndLogIn(User user) {
+	public User signInAndLogIn(User user) throws Exception {
 
 		Session session = null;
 		Transaction transaction = null;
@@ -254,7 +255,7 @@ public class UserRepository implements UserRepositoryInterface {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-
+			throw new Exception("Error en el proceso de registro: " + e.getMessage());
 		} finally {
 			if (session != null) {
 				session.close();
