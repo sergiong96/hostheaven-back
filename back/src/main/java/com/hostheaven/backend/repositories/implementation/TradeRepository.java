@@ -18,7 +18,7 @@ public class TradeRepository implements TradeRepositoryInterface {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public String createTrade(Trade trade) {
+	public String createTrade(Trade trade) throws Exception {
 		String response = "";
 		System.out.println("Trade a insertar: " + trade);
 		Session session = null;
@@ -34,7 +34,7 @@ public class TradeRepository implements TradeRepositoryInterface {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			response = "Error al insertar la transaccion: " + e.getMessage();
+			throw new Exception("Error al insertar la transaccion: " + e.getMessage());
 		} finally {
 			session.close();
 		}
@@ -61,7 +61,7 @@ public class TradeRepository implements TradeRepositoryInterface {
 	}
 
 	@Override
-	public String updateTrade(Map<String, Object> data) {
+	public String updateTrade(Map<String, Object> data) throws Exception {
 
 		int id_user = Integer.parseInt(data.get("id_user").toString());
 		double amount = Double.parseDouble(data.get("amount").toString());
@@ -100,7 +100,7 @@ public class TradeRepository implements TradeRepositoryInterface {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			response = "Error al actualizar el servicio: " + e.getMessage();
+			throw new Exception("Error al actualizar el servicio: " + e.getMessage());
 
 		} finally {
 			if (session != null) {
@@ -113,7 +113,7 @@ public class TradeRepository implements TradeRepositoryInterface {
 	}
 
 	@Override
-	public String deleteTrade(int id_trade, int id_user) {
+	public String deleteTrade(int id_trade, int id_user) throws Exception {
 
 		Session session = null;
 		Transaction transaction = null;
@@ -140,7 +140,7 @@ public class TradeRepository implements TradeRepositoryInterface {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			response = "Error al eliminar el servicio: " + e.getMessage();
+			throw new Exception("Error al eliminar el servicio: " + e.getMessage());
 
 		} finally {
 			if (session != null) {
@@ -151,6 +151,39 @@ public class TradeRepository implements TradeRepositoryInterface {
 
 		return response;
 
+	}
+	
+	public boolean userHasTrade(int id_user) throws Exception {
+		boolean hasTrade = false;
+		Session session = null;
+		Transaction transaction = null;
+		int result = -1;
+
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+
+			String hql = "SELECT id_trade FROM Trade WHERE id_user=:id_user";
+			Query<Integer> query = session.createQuery(hql, Integer.class);
+			query.setParameter("id_user", id_user);
+			result = query.uniqueResult() != null ? query.uniqueResult() : -1;
+
+			if (result != -1) {
+				hasTrade = true;
+			}
+
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			throw new Exception("Error al buscar el trade del usuario: " + e.getMessage());
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return hasTrade;
 	}
 
 }

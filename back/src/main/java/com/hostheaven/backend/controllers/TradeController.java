@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Map;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +26,21 @@ public class TradeController {
 	@PostMapping("/create")
 	public ResponseEntity<String> createTrade(@RequestBody Map<String, String> trade) throws ParseException {
 		ResponseEntity<String> httpResponse = null;
-		String message = tradeService.createTrade(trade);
+		String message = "";
 		JSONObject messageJson = new JSONObject();
-		messageJson.put("message", message);
 
-		if (message.toLowerCase().contains("error")) {
+		try {
+			message = tradeService.createTrade(trade);
+			messageJson.put("message", message);
+			if (message.toLowerCase().contains("no puede tener más de un servicio activo")) {
+				httpResponse = ResponseEntity.status(HttpStatus.CONFLICT).body(messageJson.toString());
+			} else {
+				httpResponse = ResponseEntity.ok(messageJson.toString());
+			}
+
+		} catch (Exception e) {
+			messageJson.put("message", e.getMessage());
 			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
-		} else {
-			httpResponse = ResponseEntity.ok(messageJson.toString());
 		}
 
 		return httpResponse;
@@ -42,14 +50,16 @@ public class TradeController {
 	@PostMapping("/update")
 	public ResponseEntity<String> updateTrade(@RequestBody Map<String, Object> data) {
 		ResponseEntity<String> httpResponse = null;
-		String message = tradeService.updateTrade(data);
+		String message = "";
 		JSONObject messageJson = new JSONObject();
-		messageJson.put("message", message);
 
-		if (message.toLowerCase().contains("error")) {
-			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
-		} else {
+		try {
+			message = tradeService.updateTrade(data);
+			messageJson.put("message", message);
 			httpResponse = ResponseEntity.ok(messageJson.toString());
+		} catch (Exception e) {
+			messageJson.put("message", e.getMessage());
+			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
 		}
 
 		return httpResponse;
@@ -59,14 +69,16 @@ public class TradeController {
 	@PostMapping("/delete/{id_trade}/{id_user}")
 	public ResponseEntity<String> deleteTrade(@PathVariable int id_trade, @PathVariable int id_user) {
 		ResponseEntity<String> httpResponse = null;
-		String message = tradeService.deleteTrade(id_trade, id_user);
+		String message = "";
 		JSONObject messageJson = new JSONObject();
-		messageJson.put("message", message);
 
-		if (message.toLowerCase().contains("error")) {
-			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
-		} else {
+		try {
+			message = tradeService.deleteTrade(id_trade, id_user);
+			messageJson.put("message", message);
 			httpResponse = ResponseEntity.ok(messageJson.toString());
+		} catch (Exception e) {
+			messageJson.put("message", e.getMessage());
+			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
 		}
 
 		return httpResponse;
