@@ -15,13 +15,13 @@ import com.hostheaven.backend.services.implementation.EmailRequestService;
 
 @RestController
 @RequestMapping("/email")
-@CrossOrigin(origins = { "http://localhost:3000", "https://main--hostheaven.netlify.app", "https://hostheaven.netlify.app" })
+@CrossOrigin(origins = { "http://localhost:3000", "https://main--hostheaven.netlify.app",
+		"https://hostheaven.netlify.app" })
 public class EmailRequestController {
 
 	@Autowired
 	private EmailRequestService emailRequestService;
 
-	
 	@PostMapping("/send")
 	public ResponseEntity<String> sendEmail(@RequestBody EmailRequest emailRequest) {
 		ResponseEntity<String> httpResponse = null;
@@ -37,7 +37,6 @@ public class EmailRequestController {
 
 		return httpResponse;
 	}
-	
 
 	@PostMapping("/getTickets/{user_id}")
 	public ResponseEntity<List<EmailRequest>> getTickets(@PathVariable int user_id) {
@@ -48,6 +47,44 @@ public class EmailRequestController {
 			httpResponse = ResponseEntity.ok(tickets);
 		} else {
 			httpResponse = ResponseEntity.noContent().build();
+		}
+
+		return httpResponse;
+
+	}
+
+	@PostMapping("/getPendingTickets")
+	public ResponseEntity<?> getPendingTickets() {
+		ResponseEntity<?> httpResponse = null;
+		List<EmailRequest> tickets = null;
+
+		try {
+			tickets = emailRequestService.getPendingTickets();
+			if (tickets != null) {
+				httpResponse = ResponseEntity.ok(tickets);
+			} else {
+				httpResponse = ResponseEntity.noContent().build();
+			}
+		} catch (Exception e) {
+			httpResponse = ResponseEntity.internalServerError().body(e.getMessage());
+		}
+
+		return httpResponse;
+	}
+
+	@PostMapping("/resolveTicket/{id_ticket}")
+	public ResponseEntity<String> resolveTicket(@PathVariable int id_ticket, @RequestBody String solution) {
+		ResponseEntity<String> httpResponse = null;
+		String message = "";
+		JSONObject messageJson = new JSONObject();
+
+		try {
+			message = emailRequestService.resolveTicket(id_ticket, solution);
+			messageJson.put("message", message);
+			httpResponse = ResponseEntity.ok(messageJson.toString());
+		} catch (Exception e) {
+			messageJson.put("message", e.getMessage());
+			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
 		}
 
 		return httpResponse;

@@ -75,4 +75,76 @@ public class EmailRequestRepository implements EmailRequestRepositoryInterface {
 		return tickets;
 	}
 
+	@Override
+	public List<EmailRequest> getPendingTickets() {
+		List<EmailRequest> tickets = null;
+		Session session = null;
+		Transaction transaction = null;
+
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+
+			String hql = "FROM EmailRequest WHERE subject='ticket' AND response is null";
+			Query<EmailRequest> query = session.createQuery(hql, EmailRequest.class);
+			tickets = query.getResultList();
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		} finally {
+			session.close();
+		}
+
+		return tickets;
+	}
+
+	@Override
+	public EmailRequest getEmailRequestById(int id) {
+		Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+
+		String hql = "FROM EmailRequest WHERE id_email_request=:id_email_request";
+		Query<EmailRequest> query = session.createQuery(hql, EmailRequest.class);
+		query.setParameter("id_email_request", id);
+		EmailRequest emailRequest = query.uniqueResult();
+
+		transaction.commit();
+		session.close();
+
+		return emailRequest;
+	}
+
+	@Override
+	public String resolveTicket(int id_ticket, String solution) throws Exception {
+		String message = "";
+		Session session = null;
+		Transaction transaction = null;
+
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+
+			EmailRequest email = this.getEmailRequestById(id_ticket);
+			if (email != null) {
+				email.setResponse(solution);
+				session.merge(email);
+				message = "Ticket respondido con éxito";
+			} else {
+				message = "Error: ticket no encontrado";
+			}
+
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			throw new Exception("Error al resolver el ticket" + e.getMessage());
+		} finally {
+			session.close();
+		}
+
+		return message;
+	}
 }

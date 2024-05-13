@@ -24,7 +24,6 @@ public class EmailRequestService implements EmailRequestServiceInterface {
 	@Value("${spring.mail.username}")
 	private String sender;
 
-	
 	@Override
 	public String sendEmail(EmailRequest emailRequest) {
 		String response = "";
@@ -46,12 +45,23 @@ public class EmailRequestService implements EmailRequestServiceInterface {
 
 		return response;
 	}
-	
-	
+
 	@Override
-	public List<EmailRequest> getTickets(int user_id){
-		List<EmailRequest> tickets=emailRequestRepository.getTickets(user_id);
+	public List<EmailRequest> getTickets(int user_id) {
+		List<EmailRequest> tickets = emailRequestRepository.getTickets(user_id);
 		return tickets;
+	}
+
+	@Override
+	public List<EmailRequest> getPendingTickets() {
+		List<EmailRequest> tickets = emailRequestRepository.getPendingTickets();
+		return tickets;
+	}
+
+	@Override
+	public String resolveTicket(int id_ticket, String solution) throws Exception {
+		String message = emailRequestRepository.resolveTicket(id_ticket, solution);
+		return message;
 	}
 
 }

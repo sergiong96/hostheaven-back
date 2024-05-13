@@ -6,8 +6,8 @@ import com.hostheaven.backend.models.User;
 import com.hostheaven.backend.repositories.implementation.UserRepository;
 import com.hostheaven.backend.services.interfaces.UserServiceInterface;
 
+import java.util.List;
 import java.util.Map;
-
 import org.json.*;
 
 @Service
@@ -52,14 +52,11 @@ public class UserService implements UserServiceInterface {
 		User usuario = this.userRepository.getUserById(id);
 		return usuario;
 	}
-	
-	
 
-	//public UserDTO getUserDTOById(int id) { // ok
-	//	UserDTO usuario = this.userRepository.getUserDTOById(id);
-	//	return usuario;
-	//}
-	
+	// public UserDTO getUserDTOById(int id) { // ok
+	// UserDTO usuario = this.userRepository.getUserDTOById(id);
+	// return usuario;
+	// }
 
 	@Override
 	public JSONObject verifyCredentials(String credentials) throws Exception { // ok
@@ -133,10 +130,9 @@ public class UserService implements UserServiceInterface {
 
 		return message;
 	}
-	
-	
+
 	@Override
-	public String signInAndLogIn(User user) throws Exception{
+	public String signInAndLogIn(User user) throws Exception {
 		String token = "";
 		String response = "";
 		String email = user.getEmail();
@@ -160,5 +156,11 @@ public class UserService implements UserServiceInterface {
 		}
 
 		return response;
+	}
+
+	@Override
+	public List<User> getAllUsers() throws Exception {
+		List<User> users = userRepository.getAllUsers();
+		return users;
 	}
 }

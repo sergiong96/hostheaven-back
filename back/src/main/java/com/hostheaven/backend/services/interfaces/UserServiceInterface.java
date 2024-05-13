@@ -1,8 +1,10 @@
 package com.hostheaven.backend.services.interfaces;
 
+import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
 import com.hostheaven.backend.models.User;
+
 
 public interface UserServiceInterface {
 
@@ -31,5 +33,8 @@ public interface UserServiceInterface {
 	
 	// Crea un nuevo usuario y devuelve el token de sesión
 	public String signInAndLogIn(User user) throws Exception;
+	
+	// Devuelve todos los usuarios (para el usuario admin)
+	public List<User> getAllUsers() throws Exception;
 	
 }

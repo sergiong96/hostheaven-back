@@ -1,5 +1,6 @@
 package com.hostheaven.backend.controllers;
 
+import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,13 @@ import com.hostheaven.backend.services.implementation.UserService;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = { "http://localhost:3000", "https://main--hostheaven.netlify.app", "https://hostheaven.netlify.app" })
+@CrossOrigin(origins = { "http://localhost:3000", "https://main--hostheaven.netlify.app",
+		"https://hostheaven.netlify.app" })
 public class UserController {
 
 	@Autowired
 	private UserService userService;
 
-	
 	@PostMapping("/signIn")
 	public ResponseEntity<String> createUser(@RequestBody User user) {
 		ResponseEntity<String> httpResponse = null;
@@ -45,7 +46,6 @@ public class UserController {
 
 		return httpResponse;
 	}
-	
 
 	@PostMapping("/getUser/{id}")
 	public User getUserById(@PathVariable int id) {
@@ -53,12 +53,12 @@ public class UserController {
 		return usuario;
 	}
 
-	
-	//modificar, que devuelva tambien una responseentity con el token o un internal error
+	// modificar, que devuelva tambien una responseentity con el token o un internal
+	// error
 	@PostMapping("/logIn")
 	public String verifyCredentials(@RequestBody String credentials) {
-		JSONObject token=null;
-		
+		JSONObject token = null;
+
 		try {
 			token = userService.verifyCredentials(credentials);
 		} catch (Exception e) {
@@ -67,7 +67,6 @@ public class UserController {
 		return token.toString();
 	}
 
-	
 	@PostMapping("/signInLogIn")
 	public ResponseEntity<String> signInAndLogIn(@RequestBody User user) {
 		ResponseEntity<String> httpResponse = null;
@@ -77,7 +76,7 @@ public class UserController {
 
 		try {
 			message = userService.signInAndLogIn(user);
-	
+
 			if (message.toLowerCase().contains("ya existe una cuenta vinculada a este correo")) {
 				messageJson.put("message", message);
 				httpResponse = ResponseEntity.status(HttpStatus.CONFLICT).body(messageJson.toString());
@@ -89,14 +88,13 @@ public class UserController {
 			}
 
 		} catch (Exception e) {
-				messageJson.put("message", e.getMessage());
+			messageJson.put("message", e.getMessage());
 			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
 		}
 
 		return httpResponse;
 	}
 
-	
 	@PostMapping("/updateUser")
 	public ResponseEntity<String> updateUser(@RequestBody User user) {
 		ResponseEntity<String> httpResponse = null;
@@ -119,7 +117,6 @@ public class UserController {
 
 		return httpResponse;
 	}
-	
 
 	@PostMapping("/changePassword")
 	public ResponseEntity<String> changePassword(@RequestBody Map<String, String> passwordData) {
@@ -137,14 +134,13 @@ public class UserController {
 				httpResponse = ResponseEntity.ok(messageJson.toString());
 			}
 		} catch (Exception e) {
-				messageJson.put("message", e.getMessage());
+			messageJson.put("message", e.getMessage());
 			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
 		}
 
 		return httpResponse;
 	}
 
-	
 	@PostMapping("/delete/{user_id}")
 	public ResponseEntity<String> deleteUser(@PathVariable int user_id, @RequestBody String password) {
 		ResponseEntity<String> httpResponse = null;
@@ -165,6 +161,25 @@ public class UserController {
 		} catch (Exception e) {
 			messageJson.put("message", e.getMessage());
 			httpResponse = ResponseEntity.internalServerError().body(messageJson.toString());
+		}
+
+		return httpResponse;
+	}
+
+	@PostMapping("/getAllUsers")
+	public ResponseEntity<?> getAllUsers() {
+		List<User> users = null;
+		ResponseEntity<?> httpResponse = null;
+
+		try {
+			users = userService.getAllUsers();
+			if (users != null) {
+				httpResponse = ResponseEntity.ok(users);
+			} else {
+				httpResponse = ResponseEntity.noContent().build();
+			}
+		} catch (Exception e) {
+			httpResponse = ResponseEntity.internalServerError().body(e.getMessage());
 		}
 
 		return httpResponse;

@@ -1,5 +1,6 @@
 package com.hostheaven.backend.repositories.interfaces;
 
+import java.util.List;
 import com.hostheaven.backend.models.User;
 
 public interface UserRepositoryInterface {
@@ -24,4 +25,8 @@ public interface UserRepositoryInterface {
 	
 	// Crea un nuevo usuario y lo devuelve (para crear el token de sesion con sus datos)
 	public User signInAndLogIn(User user) throws Exception;
+	
+	// Devuelve todos los usuarios (para el usuario admin)
+	public List<User> getAllUsers() throws Exception; 
+	
 }

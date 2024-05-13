@@ -1,5 +1,7 @@
 package com.hostheaven.backend.repositories.implementation;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -15,7 +17,6 @@ public class UserRepository implements UserRepositoryInterface {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	
 	@Override
 	public String createUser(User user) throws Exception {
 		String response = "";
@@ -39,7 +40,6 @@ public class UserRepository implements UserRepositoryInterface {
 
 		return response;
 	}
-	
 
 	public boolean verifyEmail(String email) {
 		boolean emailExists = false;
@@ -60,11 +60,11 @@ public class UserRepository implements UserRepositoryInterface {
 				emailExists = true;
 			}
 			transaction.commit();
-			
+
 		} catch (Exception e) {
 			emailExists = false;
 			response = 0;
-			
+
 		} finally {
 			if (session != null) {
 				session.close();
@@ -74,7 +74,6 @@ public class UserRepository implements UserRepositoryInterface {
 		return emailExists;
 	}
 
-	
 	@Override
 	public User getUserById(int id) { // ok
 		Session session = sessionFactory.openSession();
@@ -128,7 +127,6 @@ public class UserRepository implements UserRepositoryInterface {
 		return data;
 	}
 
-	
 	@Override
 	public String updateUser(User userData) throws Exception {
 
@@ -159,7 +157,7 @@ public class UserRepository implements UserRepositoryInterface {
 				transaction.rollback();
 			}
 			throw new Exception("Error al actualizar: " + e.getMessage());
-			
+
 		} finally {
 			if (session != null) {
 				session.close();
@@ -168,7 +166,6 @@ public class UserRepository implements UserRepositoryInterface {
 
 		return response;
 	}
-	
 
 	@Override
 	public String changePassword(User user, String newPassword) throws Exception {
@@ -192,7 +189,7 @@ public class UserRepository implements UserRepositoryInterface {
 				transaction.rollback();
 			}
 			throw new Exception("Error al cambiar la contraseña: " + e.getMessage());
-			
+
 		} finally {
 			if (session != null) {
 				session.close();
@@ -202,7 +199,6 @@ public class UserRepository implements UserRepositoryInterface {
 
 		return response;
 	}
-	
 
 	@Override
 	public String deleteUser(User user) throws Exception {
@@ -234,7 +230,6 @@ public class UserRepository implements UserRepositoryInterface {
 		return message;
 	}
 
-	
 	@Override
 	public User signInAndLogIn(User user) throws Exception {
 
@@ -263,6 +258,38 @@ public class UserRepository implements UserRepositoryInterface {
 		}
 
 		return savedUser;
+	}
+
+	@Override
+	public List<User> getAllUsers() throws Exception {
+
+		Session session = null;
+		Transaction transaction = null;
+		List<User> users = null;
+
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+
+			String hql = "FROM User ORDER BY id_user DESC";
+			Query<User> query = session.createQuery(hql, User.class);
+			users = query.getResultList();
+
+			transaction.commit();
+
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			throw new Exception("Error al obtener a los usuarios: " + e.getMessage());
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return users;
+
 	}
 
 }
