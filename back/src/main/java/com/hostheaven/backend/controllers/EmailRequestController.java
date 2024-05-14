@@ -79,7 +79,7 @@ public class EmailRequestController {
 		JSONObject messageJson = new JSONObject();
 
 		try {
-			message = emailRequestService.resolveTicket(id_ticket, solution);
+			message = emailRequestService.resolveTicket(id_ticket, solution.replaceAll("\"", ""));
 			messageJson.put("message", message);
 			httpResponse = ResponseEntity.ok(messageJson.toString());
 		} catch (Exception e) {
