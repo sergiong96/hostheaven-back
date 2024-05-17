@@ -20,7 +20,6 @@ public class TradeRepository implements TradeRepositoryInterface {
 	@Override
 	public String createTrade(Trade trade) throws Exception {
 		String response = "";
-		System.out.println("Trade a insertar: " + trade);
 		Session session = null;
 		Transaction transaction = null;
 
@@ -29,7 +28,7 @@ public class TradeRepository implements TradeRepositoryInterface {
 			transaction = session.beginTransaction();
 			session.persist(trade);
 			transaction.commit();
-			response = "La operación de inserción ha sido exitosa";
+			response = "Servicio contratado con éxito";
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();

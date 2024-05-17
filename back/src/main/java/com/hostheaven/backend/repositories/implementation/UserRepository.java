@@ -1,7 +1,6 @@
 package com.hostheaven.backend.repositories.implementation;
 
 import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -89,27 +88,27 @@ public class UserRepository implements UserRepositoryInterface {
 
 		return usuario;
 	}
-
+	
 	// public UserDTO getUserDTOById(int id) { // ok
-	/// Session session = sessionFactory.openSession();
-	// Transaction transaction = session.beginTransaction();
+		/// Session session = sessionFactory.openSession();
+		// Transaction transaction = session.beginTransaction();
 
-	// String hql = "FROM User WHERE id_user=:id_user";
-	// Query<User> query = session.createQuery(hql, User.class);
-	// query.setParameter("id_user", id);
-	// User usuario = query.uniqueResult();
+		// String hql = "FROM User WHERE id_user=:id_user";
+		// Query<User> query = session.createQuery(hql, User.class);
+		// query.setParameter("id_user", id);
+		// User usuario = query.uniqueResult();
 
-	// UserDTO usuarioDTO=new UserDTO();
-	// usuarioDTO.setId_user(usuario.getId_user());
-	//// usuarioDTO.setName(usuario.getName());
-	// usuarioDTO.setSurname(usuario.getSurname());
-	// usuarioDTO.setEmail(usuario.getEmail());
-	// transaction.commit();
-	// session.close();
+		// UserDTO usuarioDTO=new UserDTO();
+		// usuarioDTO.setId_user(usuario.getId_user());
+		//// usuarioDTO.setName(usuario.getName());
+		// usuarioDTO.setSurname(usuario.getSurname());
+		// usuarioDTO.setEmail(usuario.getEmail());
+		// transaction.commit();
+		// session.close();
 
-	// return usuarioDTO;
-	// }
-
+		// return usuarioDTO;
+		// }
+	
 	@Override
 	public User getUserDataByEmail(String email) {
 
